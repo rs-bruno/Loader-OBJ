@@ -3,7 +3,7 @@
 #include <list>
 #include <regex>
 #include <string>
-#include "loader_obj.h"
+#include "../h/loader_obj.h"
 using namespace std;
 
 modelo load_obj(char* path){

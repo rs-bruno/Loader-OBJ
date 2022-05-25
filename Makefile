@@ -1,10 +1,19 @@
+# Directorios
+H = h
+OBJ = obj
+SRC = src
+SCRIPTS = py
+
 all: main.exe
 
-loader_obj.o: loader_obj.cpp
-	g++ -c loader_obj.cpp
+$(OBJ)/loader_obj.o: $(SRC)/loader_obj.cpp
+	g++ -c $< -o $@
 
-main.o: main.cpp
-	g++ -c main.cpp
+$(OBJ)/main.o: $(SRC)/main.cpp
+	g++ -c $< -o $@
 
-main.exe: main.o loader_obj.o
-	g++ -o main.exe main.o loader_obj.o
+main.exe: $(OBJ)/main.o $(OBJ)/loader_obj.o
+	g++ -o main.exe $?
+
+clean:
+	py $(SCRIPTS)/clean.py

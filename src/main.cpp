@@ -1,4 +1,4 @@
-#include "loader_obj.h"
+#include "../h/loader_obj.h"
 
 int main(int argc, char* argv[]){
 	char path[] = "cubo1.obj";
