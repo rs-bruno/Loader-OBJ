@@ -3,18 +3,8 @@
 #include <list>
 #include <regex>
 #include <string>
+#include "../h/loader_obj.h"
 using namespace std;
-
-typedef struct{
-	int vertex_count;
-	int uv_count;
-	int normal_count;
-	int index_count;
-	float* vertex_arr;
-	float* uv_arr;
-	float* normal_arr;
-	int* index_arr;
-} modelo;
 
 modelo load_obj(char* path){
 	modelo ret;
@@ -140,10 +130,4 @@ void print_modelo(modelo m){
 	for(int i = 0; i < m.index_count; ++i){
 		cout << i << ": " << "v" << m.index_arr[i] << endl;
 	}
-}
-
-int main(int argc, char* argv[]){
-	char path[] = "cubo1.obj";
-	modelo m = load_obj(path);
-	print_modelo(m);
 }
