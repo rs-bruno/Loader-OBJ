@@ -1,11 +1,31 @@
 #include <cstdio>
 #include <iostream>
+#include <iterator>
 #include <list>
 #include <regex>
 #include <string>
 #include "../h/loader_obj.h"
 using namespace std;
 
+ConjuntoCaras::ConjuntoCaras(){}
+ConjuntoCaras::~ConjuntoCaras(){}
+void ConjuntoCaras::instestarCara(cara c){
+	listas[c.vertex_count].push_back(c);
+}
+int* ConjuntoCaras::indicesListas(){
+	int* ret = new int[listas.size()+1];
+	ret[0] = 0;
+	map<int , list<cara>>::iterator it = listas.begin();
+	for(int i = 1; i <= listas.size(); ++i){
+		ret[i] = it->first;
+		it++;
+	}
+}
+list<cara>& ConjuntoCaras::devolverLista(int cant_vertices){
+	return listas[cant_vertices];
+}
+
+//REIMPLEMENTAR
 modelo load_obj(char* path){
 	modelo ret;
 	FILE* model_file = fopen(path, "r");
