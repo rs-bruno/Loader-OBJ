@@ -6,14 +6,11 @@ SCRIPTS = py
 
 all: main.exe
 
-$(OBJ)/loader_obj.o: $(SRC)/loader_obj.cpp
+$(OBJ)/loader_obj.o: $(SRC)/loader_obj.cpp $(H)/loader_obj.h
 	g++ -c $< -o $@
 
-$(OBJ)/main.o: $(SRC)/main.cpp
-	g++ -c $< -o $@
-
-main.exe: $(OBJ)/main.o $(OBJ)/loader_obj.o
-	g++ -o main.exe $?
+main.exe: $(SRC)/main.cpp $(OBJ)/loader_obj.o
+	g++ -o main.exe $^
 
 clean:
 	py $(SCRIPTS)/clean.py
