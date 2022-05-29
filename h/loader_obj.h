@@ -46,6 +46,7 @@ class ConjuntoCaras {
 };
 
 typedef struct{
+	public:
 		/*
 			Elementos básicos del modelo.
 		*/
@@ -60,12 +61,12 @@ typedef struct{
 			Caras del modelo.
 		*/
 		ConjuntoCaras caras;
-}modelo;
+} modelo;
 
 /*
 	Devuelve un modelo, recibe como entrada la ruta del archivo.obj a cargar.
 */
-modelo load_obj(char*);
+modelo load_modelo(char*);
 
 /*
 	Imprime una cara en la salida estándar.
@@ -76,4 +77,9 @@ void print_cara(cara c);
 	Imprime un modelo en la salida estándar.
 */
 void print_modelo(modelo m);
+
+/*
+	Libera la memoria ocupada por el modelo.
+*/
+void free_modelo(modelo m);
 #endif

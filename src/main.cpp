@@ -3,9 +3,9 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
-	char path[] = "456.obj";
-	modelo m = load_obj(path);
+	char path[] = "models/456.obj";
+	modelo m = load_modelo(path);
 	print_modelo(m);
-	getchar();
+	free_modelo(m);
 	return 0;
 }

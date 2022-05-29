@@ -20,6 +20,7 @@ ConjuntoCaras::~ConjuntoCaras(){
 			delete[] (*it).ind_normals;
 		}
 	}
+	listas.clear();
 }
 void ConjuntoCaras::instestarCara(cara c){
 	listas[c.vertex_count].push_back(c);
@@ -41,7 +42,7 @@ list<cara>& ConjuntoCaras::devolverLista(int cant_vertices){
 /*
 	Implementación funciones del módulo.
 */
-modelo load_obj(char* path){
+modelo load_modelo(char* path){
 	modelo ret;
 	ret.vertex_count = 0;
 	ret.uv_count = 0;
@@ -207,5 +208,12 @@ void print_modelo(modelo m){
 		for(list<cara>::iterator it = l.begin(); it != l.end(); ++it){
 			print_cara(*it);
 		}
+		cout << endl;
 	}
+}
+
+void free_modelo(modelo m){
+	delete[] m.vertex_arr;
+	delete[] m.uv_arr;
+	delete[] m.normal_arr;
 }
