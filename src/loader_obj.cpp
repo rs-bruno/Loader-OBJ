@@ -10,12 +10,19 @@ using namespace std;
 /*
 	Implementación conjunto de caras.
 */
-ConjuntoCaras::ConjuntoCaras(){}
-ConjuntoCaras::~ConjuntoCaras(){}
+ConjuntoCaras::~ConjuntoCaras(){
+	int* il = indicesListas();
+	for(int i = 1; i <= il[0]; ++i){
+		list<cara>::iterator it = listas[il[i]].begin();
+		for(; it != listas[il[i]].end(); ++it){
+			delete[] (*it).ind_vertices;
+			delete[] (*it).ind_uvs;
+			delete[] (*it).ind_normals;
+		}
+	}
+}
 void ConjuntoCaras::instestarCara(cara c){
-	// cout << "cara insertada" << endl;
 	listas[c.vertex_count].push_back(c);
-	// cout << listas[c.vertex_count].size() << endl;
 }
 int* ConjuntoCaras::indicesListas(){
 	int* ret = new int[listas.size()+1];
@@ -34,7 +41,6 @@ list<cara>& ConjuntoCaras::devolverLista(int cant_vertices){
 /*
 	Implementación funciones del módulo.
 */
-//IMPLEMENTAR SIN USAR UN ARREGLO DE LINEAS, SOLO LEYENDO LAS LINEAS EN UN BUFFER.
 modelo load_obj(char* path){
 	modelo ret;
 	ret.vertex_count = 0;
@@ -122,13 +128,10 @@ modelo load_obj(char* path){
 					*/
 					switch(turno){
 						case 0:	ind_ve.push_back(buff - 1);
-										// cout << buff - 1 << " ";
 							break;
 						case 1: ind_uv.push_back(buff - 1);
-										// cout << buff - 1 << " ";
 							break;
 						case 2: ind_nm.push_back(buff - 1);
-										// cout << buff - 1 << " ";
 							break;
 					}
 					turno = (++turno) % 3;
@@ -140,7 +143,7 @@ modelo load_obj(char* path){
 				}
 				++aux;
 			}
-			// cout << " vvv ";
+
 			//Agrego cara al modelo resultado.
 			cara c;
 			c.vertex_count = ind_ve.size();
@@ -162,14 +165,8 @@ modelo load_obj(char* path){
 			for(list<int>::iterator it = ind_nm.begin(); it != ind_nm.end(); ++it){
 				c.ind_normals[i++] = *it;
  			}
-
-			// for(i = 0; i < ind_ve.size(); ++i){
-			// 	cout << c.ind_vertices[i] << "/" << c.ind_uvs[i] << "/" << c.ind_normals[i] << " ";
-			// }
-			// cout << endl;
 			
 			ret.caras.instestarCara(c);
-			// cout << "indicesListaCara: " << ret.caras.indicesListas()[0] << endl;
 		}
 	}
 	fclose(model_file);
@@ -210,6 +207,5 @@ void print_modelo(modelo m){
 		for(list<cara>::iterator it = l.begin(); it != l.end(); ++it){
 			print_cara(*it);
 		}
-		cout << endl;
 	}
 }
