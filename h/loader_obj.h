@@ -19,10 +19,7 @@ typedef struct{
 
 class ConjuntoCaras {
 	public:
-		ConjuntoCaras();
 		~ConjuntoCaras();
-		ConjuntoCaras(const ConjuntoCaras&) = default;
-		ConjuntoCaras& operator=(const ConjuntoCaras&) = default;
 
 		/*
 			Inserta una cara al conjunto.

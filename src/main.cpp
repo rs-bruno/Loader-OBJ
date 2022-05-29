@@ -6,6 +6,6 @@ int main(int argc, char* argv[]){
 	char path[] = "456.obj";
 	modelo m = load_obj(path);
 	print_modelo(m);
-	cout << "Saliendo" << endl;
+	getchar();
 	return 0;
 }
