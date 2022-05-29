@@ -19,11 +19,10 @@ typedef struct{
 
 class ConjuntoCaras {
 	public:
-		/*
-			Constructor y destructor por defecto.
-		*/
 		ConjuntoCaras();
 		~ConjuntoCaras();
+		ConjuntoCaras(const ConjuntoCaras&) = default;
+		ConjuntoCaras& operator=(const ConjuntoCaras&) = default;
 
 		/*
 			Inserta una cara al conjunto.
@@ -50,26 +49,31 @@ class ConjuntoCaras {
 };
 
 typedef struct{
-	/*
-		Elementos básicos del modelo.
-	*/
-	int vertex_count;
-	int uv_count;
-	int normal_count;
-	float* vertex_arr;
-	float* uv_arr;
-	float* normal_arr;
-	
-	/*
-		Caras del modelo.
-	*/
-	ConjuntoCaras* caras;
-} modelo;
+		/*
+			Elementos básicos del modelo.
+		*/
+		int vertex_count;
+		int uv_count;
+		int normal_count;
+		float* vertex_arr;
+		float* uv_arr;
+		float* normal_arr;
+		
+		/*
+			Caras del modelo.
+		*/
+		ConjuntoCaras caras;
+}modelo;
 
 /*
 	Devuelve un modelo, recibe como entrada la ruta del archivo.obj a cargar.
 */
 modelo load_obj(char*);
+
+/*
+	Imprime una cara en la salida estándar.
+*/
+void print_cara(cara c);
 
 /*
 	Imprime un modelo en la salida estándar.

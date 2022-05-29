@@ -1,12 +1,15 @@
+#include <cctype>
 #include <cstdio>
 #include <iostream>
-#include <iterator>
 #include <list>
 #include <regex>
 #include <string>
 #include "../h/loader_obj.h"
 using namespace std;
 
+/*
+	Implementación conjunto de caras.
+*/
 ConjuntoCaras::ConjuntoCaras(){}
 ConjuntoCaras::~ConjuntoCaras(){}
 void ConjuntoCaras::instestarCara(cara c){
@@ -14,7 +17,7 @@ void ConjuntoCaras::instestarCara(cara c){
 }
 int* ConjuntoCaras::indicesListas(){
 	int* ret = new int[listas.size()+1];
-	ret[0] = 0;
+	ret[0] = listas.size();
 	map<int , list<cara>>::iterator it = listas.begin();
 	for(int i = 1; i <= listas.size(); ++i){
 		ret[i] = it->first;
@@ -25,109 +28,158 @@ list<cara>& ConjuntoCaras::devolverLista(int cant_vertices){
 	return listas[cant_vertices];
 }
 
-//REIMPLEMENTAR
+/*
+	Implementación funciones del módulo.
+*/
+
 modelo load_obj(char* path){
 	modelo ret;
+	ret.vertex_count = 0;
+	ret.uv_count = 0;
+	ret.normal_count = 0;
+
 	FILE* model_file = fopen(path, "r");
 	list<float> l_vertices;
 	list<float> l_uvs;
 	list<float> l_normals;
-	list<int> ind_vertices;
-	list<int> ind_uvs;
-	list<int> ind_normals;
 
 	list<char*> lines;
-	char buff[128];
+	char buff[512];
 	while (fgets(buff, sizeof(buff), model_file)) {
-		char* nl = new char[strlen(buff)];
-		strcpy(nl, buff);
-		lines.push_back(nl);
+		cout << buff << endl;
+	// 	char* nl = new char[strlen(buff)];
+	// 	strcpy(nl, buff);
+	// 	lines.push_back(nl);
 	}
 	fclose(model_file);
+
 	regex re1("v ([-]?[0-9]*\\.[0-9]*) ([-]?[0-9]*\\.[0-9]*) ([-]?[0-9]*\\.[0-9]*)");
 	regex re2("vt ([-]?[0-9]*\\.[0-9]*) ([-]?[0-9]*\\.[0-9]*)");
 	regex re3("vn ([-]?[0-9]*\\.[0-9]*) ([-]?[0-9]*\\.[0-9]*) ([-]?[0-9]*\\.[0-9]*)");
-	regex re4("f ([0-9]*)/([0-9]*)/([0-9]*) ([0-9]*)/([0-9]*)/([0-9]*) ([0-9]*)/([0-9]*)/([0-9]*)");
+	regex re4("f (([0-9]*)/([0-9]*)/([0-9]*)\\s)*");
 	cmatch m;
-	for(list<char*>::iterator it = lines.begin(); it != lines.end(); ++it){
-		if(regex_search(*it, m, re1)){
-			l_vertices.push_back(stof(m[1].str()));
-			l_vertices.push_back(stof(m[2].str()));
-			l_vertices.push_back(stof(m[3].str()));
-		}
-	}
-	for(list<char*>::iterator it = lines.begin(); it != lines.end(); ++it){
-		if(regex_search(*it, m, re2)){
-			l_uvs.push_back(stof(m[1].str()));
-			l_uvs.push_back(stof(m[2].str()));
-		}
-	}
-	for(list<char*>::iterator it = lines.begin(); it != lines.end(); ++it){
-		if(regex_search(*it, m, re3)){
-			l_normals.push_back(stof(m[1].str()));
-			l_normals.push_back(stof(m[2].str()));
-			l_normals.push_back(stof(m[3].str()));
-		}
-	}
-	for(list<char*>::iterator it = lines.begin(); it != lines.end(); ++it){
-		if(regex_search(*it, m, re4)){
-			ind_vertices.push_back(stoi(m[1].str()) - 1);
-			ind_vertices.push_back(stoi(m[4].str()) - 1);
-			ind_vertices.push_back(stoi(m[7].str()) - 1);
-			ind_uvs.push_back(stoi(m[2].str()) - 1);
-			ind_uvs.push_back(stoi(m[5].str()) - 1);
-			ind_uvs.push_back(stoi(m[8].str()) - 1);
-			ind_normals.push_back(stoi(m[3].str()) - 1);
-			ind_normals.push_back(stoi(m[6].str()) - 1);
-			ind_normals.push_back(stoi(m[9].str()) - 1);
-		}
-	}
 
-	ret.vertex_count = l_vertices.size() / 3;
-	ret.vertex_arr = new float[l_vertices.size()];
-	list<float>::iterator it = l_vertices.begin();
-	for(int i = 0; i < l_vertices.size(); ++i)
-		ret.vertex_arr[i] = *(it++);
+	//Se recorre la lista de lineas en busca de las que matchean la regex1.
+	// for(list<char*>::iterator it = lines.begin(); it != lines.end(); ++it){
+	// 	if(regex_search(*it, m, re1)){
+	// 		l_vertices.push_back(stof(m[1].str()));
+	// 		l_vertices.push_back(stof(m[2].str()));
+	// 		l_vertices.push_back(stof(m[3].str()));
+	// 	}
+	// }
 
-	float* uvs_aux = new float[l_uvs.size()];
-	it = l_uvs.begin();
-	for(int i = 0; i < l_uvs.size(); ++i)
-		uvs_aux[i] = *(it++);
-	ret.uv_arr = new float[ind_uvs.size()*2];
-	int i = 0;
-	for(list<int>::iterator it = ind_uvs.begin(); it != ind_uvs.end(); ++it){
-		ret.uv_arr[2*i] = uvs_aux[2*(*it)];
-		ret.uv_arr[2*i+1] = uvs_aux[2*(*it)+1];
-		++i;
-	}
- 	ret.uv_count = ind_uvs.size();
+	//Se recorre la lista de lineas en busca de las que matchean la regex2.
+	// for(list<char*>::iterator it = lines.begin(); it != lines.end(); ++it){
+	// 	if(regex_search(*it, m, re2)){
+	// 		l_uvs.push_back(stof(m[1].str()));
+	// 		l_uvs.push_back(stof(m[2].str()));
+	// 	}
+	// }
 
-	float* normals_aux = new float[l_normals.size()];
-	it = l_normals.begin();
-	for(int i = 0; i < l_normals.size(); ++i)
-		normals_aux[i] = *(it++);
-	ret.normal_arr = new float[ind_normals.size()*3];
-	i = 0;
-	for(list<int>::iterator it = ind_normals.begin(); it != ind_normals.end(); ++it){
-		ret.normal_arr[3*i] = normals_aux[3*(*it)];
-		ret.normal_arr[3*i+1] = normals_aux[3*(*it)+1];
-		ret.normal_arr[3*i+2] = normals_aux[3*(*it)+2];
-		++i;
-	}
+	//Se recorre la lista de lineas en busca de las que matchean la regex3.
+	// for(list<char*>::iterator it = lines.begin(); it != lines.end(); ++it){
+	// 	if(regex_search(*it, m, re3)){
+	// 		l_normals.push_back(stof(m[1].str()));
+	// 		l_normals.push_back(stof(m[2].str()));
+	// 		l_normals.push_back(stof(m[3].str()));
+	// 	}
+	// }
+	
+	//Se pasa la lista de vertices a formato de arreglo
+	// ret.vertex_count = l_vertices.size() / 3;
+	// ret.vertex_arr = new float[l_vertices.size()];
+	// list<float>::iterator it = l_vertices.begin();
+	// for(int i = 0; i < l_vertices.size(); ++i)
+	// 	ret.vertex_arr[i] = *(it++);
 
-	ret.normal_count = ind_normals.size();
+	//Se pasa la lista de uvs a formato de arreglo
+	// ret.uv_count = l_uvs.size() / 2;
+	// ret.uv_arr = new float[l_uvs.size()];
+	// it = l_uvs.begin();
+	// for(int i = 0; i < l_uvs.size(); ++i)
+	// 	ret.uv_arr[i] = *(it++);
 
-	ret.index_arr = new int[ind_vertices.size()];
-	i = 0;
+	//Se pasa la lista de normales a formato de arreglo
+	// ret.normal_count = l_normals.size() / 3;
+	// ret.normal_arr = new float[l_normals.size()];
+	// it = l_normals.begin();
+	// for(int i = 0; i < l_normals.size(); ++i)
+	// 	ret.normal_arr[i] = *(it++);
+	
+	//Se recorre la lista de lineas en busca de las que matchean la regex4 y se agrega la cara al conjunto de caras.
+	// for(list<char*>::iterator it = lines.begin(); it != lines.end(); ++it){
+	// 	if(regex_search(*it, m, re4)){
+	// 		//Parseo linea manualmente (ya se que tiene la forma de la regex4).
+	// 		list<int> ind_ve;
+	// 		list<int> ind_uv;
+	// 		list<int> ind_nm;
+	// 		char* aux = *it + 2 ; // saltea la f y el espacio
+	// 		int buff = -1;
+	// 		int turno = 0;
+	// 		while(*aux != '\0'){
+	// 			if(*aux == '/'|| isspace(*aux)){
+	// 				/*
+	// 					Se resta uno a buff porque los indices de .obj arrancan en 1 mientras que los de
+	// 					la clase Modelo arrancan en 0.
+	// 				*/
+	// 				switch(turno){
+	// 					case 0:	ind_ve.push_back(buff - 1);
+	// 						break;
+	// 					case 1: ind_uv.push_back(buff - 1);
+	// 						break;
+	// 					case 2: ind_nm.push_back(buff - 1);
+	// 						break;
+	// 				}
+	// 				turno = (++turno) % 3;
+	// 				buff = -1;
+	// 			}
+	// 			else if(isdigit(*aux)){
+	// 				if(buff == -1 ) buff = 0;
+	// 				buff = buff*10 + (*aux - '0');
+	// 			}
+	// 			++aux;
+	// 		}
+			
+	// 		//Agrego cara al modelo resultado.
+	// 		cara c;
+	// 		c.vertex_count = ind_ve.size();
 
-	for(list<int>::iterator it = ind_vertices.begin(); it != ind_vertices.end(); ++it){
-		ret.index_arr[i++] = *it;
-	}
+	// 		c.ind_vertices = new int[ind_ve.size()];
+	// 		int i = 0;
+	// 		for(list<int>::iterator it = ind_ve.begin(); it != ind_ve.end(); ++it){
+	// 			c.ind_vertices[i] = *it;
+	// 			cout << (*it) << " " << endl;
+	// 		}
 
-	ret.index_count = ind_vertices.size();
-	delete[] uvs_aux;
-	delete[] normals_aux;
+	// 		c.ind_uvs = new int[ind_ve.size()];
+	// 		i = 0;
+	// 		for(list<int>::iterator it = ind_uv.begin(); it != ind_uv.end(); ++it){
+	// 			c.ind_uvs[i] = *it;
+	// 			cout << (*it) << " " << endl;
+	// 		}
+
+	// 		c.ind_normals = new int[ind_ve.size()];
+	// 		i = 0;
+	// 		for(list<int>::iterator it = ind_ve.begin(); it != ind_ve.end(); ++it){
+	// 			c.ind_normals[i] = *it;
+	// 			cout << (*it) << " " << endl;
+ 	// 		}
+
+	// 		ret.caras.instestarCara(c);
+	// 	}
+	// }
+	// for(list<char*>::iterator it = lines.begin(); it != lines.end(); ++it){
+	// 	delete[] *it;
+	// }
 	return  ret;
+}
+
+void print_cara(cara c){
+	cout << "f ";
+	for(int i = 0; i < c.vertex_count; ++i){
+		cout << c.ind_vertices[i] << "/" << c.ind_uvs[i] << "/" << c.ind_normals[i] << " ";
+	}
+	cout << endl;
 }
 
 void print_modelo(modelo m){
@@ -146,8 +198,14 @@ void print_modelo(modelo m){
 		cout << i << ": (" << m.normal_arr[3*i] << ", " << m.normal_arr[3*i+1] << ", " << m.normal_arr[3*i+2] << ") " << endl;
 	}
 	cout << endl;
-	cout << "index_arr: " << "(" <<m.index_count << ")" << endl;
-	for(int i = 0; i < m.index_count; ++i){
-		cout << i << ": " << "v" << m.index_arr[i] << endl;
-	}
+	// int* indices_listas = m.caras.indicesListas();
+	// cout << indices_listas[0] << endl;
+	// for(int i = 1; i <= indices_listas[0]; ++i){
+	// 	cout << "Lista de caras de poligonos con " << indices_listas[i] << " vertices: " << endl;
+	// 	list<cara> l = m.caras.devolverLista(indices_listas[i]);
+	// 	for(list<cara>::iterator it = l.begin(); it != l.end(); ++it){
+	// 		print_cara(*it);
+	// 	}
+	// 	cout << endl;
+	// }
 }
