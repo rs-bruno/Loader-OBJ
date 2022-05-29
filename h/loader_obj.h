@@ -30,7 +30,7 @@ class ConjuntoCaras {
 		void instestarCara(cara);
 		
 		/*
-			Devuelve un arreglo con los índices del vector de listas que no son vacías.
+			Devuelve un arreglo con los índices del map de listas que no son vacías.
 			El arreglo siempre tiene tamaño al menos 1 y el primer elemento indica el tamaño del arreglo - 1,
 			es decir la cantidad de listas no vacías.
 		*/
