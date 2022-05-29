@@ -1,15 +1,15 @@
 # Directorios
-H = h
-OBJ = obj
-SRC = src
+HEADERS = h
+SOURCE = src
+OBJECTS = o
 SCRIPTS = py
 
 all: main.exe
 
-$(OBJ)/loader_obj.o: $(SRC)/loader_obj.cpp $(H)/loader_obj.h
+$(OBJECTS)/loader_obj.o: $(SOURCE)/loader_obj.cpp $(HEADERS)/loader_obj.h
 	g++ -c $< -o $@
 
-main.exe: $(SRC)/main.cpp $(OBJ)/loader_obj.o
+main.exe: $(SOURCE)/main.cpp $(OBJECTS)/loader_obj.o
 	g++ -o main.exe $^
 
 clean:

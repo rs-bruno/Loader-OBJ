@@ -1,4 +1,3 @@
-#include <iostream>
 #include "../h/loader_obj.h"
 using namespace std;
 
